@@ -61,7 +61,4 @@ Outputs:
 * trimmedPath = foo 
 * method = GET 
 * queryStringObject = [Object: null prototype] { fizz: 'buzz' }
-
-
-
 */
