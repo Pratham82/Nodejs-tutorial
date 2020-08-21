@@ -55,17 +55,61 @@ var server = http.createServer(function (req, res) {
 	});
 
 	//* We have a predefined function which tells us when the stream is ended
-	//* The end event will be called every time even if we send the payload or not, data event will not be called always
+	//* The (end) event will be called every time even if we send the payload or not, data event will not be called always
 	//* If we don't have a payload in our request then the buffer will initialized with empty string but noting gets appended to it, after that the end event will be called and ended then then the response will be sent
 
 	req.on("end", function () {
 		buffer += decoder.end();
 
-		//* After the request is finished we want to do the things that we were doing before
-		//* 3. Send the response
-		res.end("Hello world\n");
+		//*Choose the handler this request should go to. If one is not found, use the not found handler
+		//* If the path that user is requesting is exists as the key on the router for eg. if the user is requesting (/sample) that exists on the router so that request should be routed to (handlers.sample), if the request doesn't exists, for eg. request is (/foo) so we should route the request to (handlers.notFound)
+		var chosenHandler =
+			typeof router[trimmedPath] !== "undefined"
+				? router[trimmedPath]
+				: handlers.notFound;
 
-		//* 4. Log the request
+		//* Construct the data object to send to the handler
+		var data = {
+			trimmedPath,
+			queryStringObject,
+			method,
+			headers,
+			payload: buffer,
+		};
+
+		//* Route the request  to the handler specified in the router
+		chosenHandler(data, function (statusCode, payload) {
+			//* Use the status code callback by the handler, or default to 200
+			statusCode = typeof statusCode == "number" ? statusCode : 200;
+
+			//* use the payload callback by the handler or default to an empty object
+			payload = typeof payload == "object" ? payload : {};
+
+			//* Convert the payload to a string
+			var payloadString = JSON.stringify(payload);
+
+			//* After the request is finished we want to do the things that we were doing before
+
+			//* Return the response
+			//* We are using the built in writeHead function that comes from every response object received by http server to write a status code
+			//* If we are returning a 200 then we are writing 200 response here
+			//* Whatever status code the handler is defined will be written here
+
+			res.writeHead(statusCode);
+			//* 3. Send the response
+			// res.end("Hello World\n");
+
+			//* Returning a payload string
+			res.end(payloadString);
+
+			//* If we are sending a payload we have to use POST method
+			//* And in POSTMAN we have to add the body so that will be read
+
+			//* 4. Log the request
+			console.log("Returning this response: ", statusCode, payloadString);
+		});
+
+		//* Old request
 		// console.log(
 		// 	`Request is received path: ${trimmedPath} \n with ${method} method \n and with these query string params: `,
 		// 	queryStringObject,
@@ -74,9 +118,6 @@ var server = http.createServer(function (req, res) {
 		// 	`Given payload: `,
 		// 	buffer
 		// );
-		//* If we are sending a payload we have to use POST method
-		//*  And in POSTMAN we have to add the body so that will be read
-		console.log("Request received with this payload: ", buffer);
 	});
 });
 
@@ -84,6 +125,26 @@ var server = http.createServer(function (req, res) {
 server.listen(3000, function () {
 	console.log("The sever is listening on port 3000");
 });
+
+//* Define the handlers
+var handlers = {};
+
+//* Data inside the handlers contains the block of data which has been parsed earlier
+//* We want the handlers to callback when they're done handling the request and tell us 2 things : 1) Callback a HTTP status code 2) A payload(object)
+
+//* Creating sample handler
+handlers.sample = function (data, callback) {
+	callback(406, { name: "Sample handler" });
+};
+
+//* Not found handler
+handlers.notFound = function (data, callback) {
+	callback(404);
+};
+///* Defining a request router
+var router = {
+	sample: handlers.sample,
+};
 
 /*
 
@@ -102,4 +163,9 @@ server.listen(3000, function () {
 * when we request the url: localhost:3000
 * The sever is listening on port 3000
 * Request received with this payload:  This is the body we are sending
+
+
+* Output after Routing Request:
+The sever is listening on port 3000
+Returning this response:  406 {"name":"Sample handler"}
 */

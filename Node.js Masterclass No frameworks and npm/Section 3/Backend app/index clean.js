@@ -38,17 +38,44 @@ var server = http.createServer(function (req, res) {
 	req.on("end", function () {
 		buffer += decoder.end();
 
-		//* 3. Send the response
-		res.end("Hello world\n");
+		var chosenHandler =
+			typeof router[trimmedPath] !== "undefined"
+				? router[trimmedPath]
+				: handlers.notFound;
 
-		//* 4. Log the request
-		// console.log(
-		// 	`Request is received path: ${trimmedPath} \n with ${method} method \n and with these query string params: `,
-		// 	queryStringObject,
-		// 	`\nheaders:`,
-		// 	headers
-		// );
-		console.log("Request received with this payload: ", buffer);
+		//* Construct the data object to send to the handler
+		var data = {
+			trimmedPath,
+			queryStringObject,
+			method,
+			headers,
+			payload: buffer,
+		};
+
+		chosenHandler(data, function (statusCode, payload) {
+			//* Use the status code callback by the handler, or default to 200
+			statusCode = typeof statusCode == "number" ? statusCode : 200;
+
+			//* use the payload callback by the handler or default to an empty object
+			payload = typeof payload == "object" ? payload : {};
+
+			//* Convert the payload to a string
+			var payloadString = JSON.stringify(payload);
+
+			//* After the request is finished we want to do the things that we were doing before
+
+			res.writeHead(statusCode);
+			//* 3. Send the response
+
+			//* Returning a payload string
+			res.end(payloadString);
+
+			//* If we are sending a payload we have to use POST method
+			//* And in POSTMAN we have to add the body so that will be read
+
+			//* 4. Log the request
+			console.log("Returning this response: ", statusCode, payloadString);
+		});
 	});
 });
 
@@ -56,3 +83,20 @@ var server = http.createServer(function (req, res) {
 server.listen(3000, function () {
 	console.log("The sever is listening on port 3000");
 });
+
+//* Define the handlers
+var handlers = {};
+
+//* Creating sample handler
+handlers.sample = function (data, callback) {
+	callback(406, { name: "Sample handler" });
+};
+
+//* Not found handler
+handlers.notFound = function (data, callback) {
+	callback(404);
+};
+///* Defining a request router
+var router = {
+	sample: handlers.sample,
+};
