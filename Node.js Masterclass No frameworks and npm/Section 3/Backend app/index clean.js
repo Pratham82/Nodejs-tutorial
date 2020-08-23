@@ -7,6 +7,7 @@ Primary file for the API
 var http = require("http");
 var url = require("url");
 var StringDecoder = require("string_decoder").StringDecoder;
+var config = require("./config");
 
 var server = http.createServer(function (req, res) {
 	//* Whenever someone call localhost:3000 this function gets called and the req and res object is new every time
@@ -62,6 +63,9 @@ var server = http.createServer(function (req, res) {
 			//* Convert the payload to a string
 			var payloadString = JSON.stringify(payload);
 
+			//* Add the content type in header
+			res.setHeader("Content-Type", "application/json");
+
 			//* After the request is finished we want to do the things that we were doing before
 
 			res.writeHead(statusCode);
@@ -79,9 +83,11 @@ var server = http.createServer(function (req, res) {
 	});
 });
 
-//Start the server, and have it listen on PORT 3000
-server.listen(3000, function () {
-	console.log("The sever is listening on port 3000");
+//* Start the server, and set the port dynamically
+server.listen(config.port, function () {
+	console.log(
+		`The sever is listening on port ${config.port} in ${config.envName} mode`
+	);
 });
 
 //* Define the handlers

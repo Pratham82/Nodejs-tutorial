@@ -9,6 +9,8 @@ Primary file for the API
 var http = require("http");
 var url = require("url");
 var StringDecoder = require("string_decoder").StringDecoder;
+var config = require("./config");
+
 // console.log(http);
 
 // The sever should respond to all requests with a string
@@ -46,7 +48,7 @@ var server = http.createServer(function (req, res) {
 	var decoder = new StringDecoder("utf-8");
 	var buffer = ""; // It will be used to store the stream
 
-	//* When the request object emmits the event on data we want the callback to be called and the data should be passed to the callback, and the data should be appended toe buffer though a string decoder
+	//* When the request object emits the event on data we want the callback to be called and the data should be passed to the callback, and the data should be appended toe buffer though a string decoder
 
 	req.on("data", function (data) {
 		//* As the data is streaming in every time it stream in a little piece he request object emits the data event that we are binding to and it sends us the bunch of un-decoded data, we decode it using (utf-8) and we append the result ot the buffer
@@ -95,6 +97,9 @@ var server = http.createServer(function (req, res) {
 			//* If we are returning a 200 then we are writing 200 response here
 			//* Whatever status code the handler is defined will be written here
 
+			//* Specifying the format of the response by adding the content type in header
+			res.setHeader("Content-Type", "application/json");
+
 			res.writeHead(statusCode);
 			//* 3. Send the response
 			// res.end("Hello World\n");
@@ -121,9 +126,12 @@ var server = http.createServer(function (req, res) {
 	});
 });
 
-//Start the server, and have it listen on PORT 3000
-server.listen(3000, function () {
-	console.log("The sever is listening on port 3000");
+//* Start the server and set the port dynamically
+server.listen(config.port, function () {
+	// console.log("The sever is listening on port 3000");
+	console.log(
+		`The server is listening on port ${config.port} in ${config.envName} mode`
+	);
 });
 
 //* Define the handlers
