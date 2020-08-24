@@ -9,13 +9,15 @@ var environments = {};
 //* Development object
 
 environments.development = {
-	port: 3000,
+	httpPort: 3000,
+	httpsPort: 3001,
 	envName: "development",
 };
 
 //* Production object
 environments.production = {
-	port: 4000,
+	httpPort: 4000,
+	httpsPort: 4001,
 	envName: "production",
 };
 
