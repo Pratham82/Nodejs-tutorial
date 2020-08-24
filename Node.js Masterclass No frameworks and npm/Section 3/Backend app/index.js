@@ -7,14 +7,45 @@ Primary file for the API
 // Starting a server
 // Dependencies
 var http = require("http");
+var https = require("https");
 var url = require("url");
 var StringDecoder = require("string_decoder").StringDecoder;
 var config = require("./config");
+var fs = require("fs");
 
 // console.log(http);
 
-// The sever should respond to all requests with a string
-var server = http.createServer(function (req, res) {
+//* Instantiating the HTTP server
+var HTTPServer = http.createServer(function (req, res) {
+	unifiedServer(req, res);
+});
+
+//* Starting HTTP server
+HTTPServer.listen(config.httpPort, function () {
+	// console.log("The sever is listening on port 3000");
+	console.log(
+		`The server is listening on port ${config.httpPort} in ${config.envName} mode`
+	);
+});
+
+//* Instantiating the HTTPS server
+var HTTPSServerOptions = {
+	key: fs.readFileSync("./https/key.pem"),
+	cert: fs.readFileSync("./https/cert.pem"),
+};
+var HTTPSServer = https.createServer(HTTPSServerOptions, function (req, res) {
+	unifiedServer(req, res);
+});
+
+//* Starting HTTPS server
+HTTPSServer.listen(config.httpsPort, function () {
+	console.log(
+		`The server is listening on port ${config.httpsPort} in ${config.envName} mode`
+	);
+});
+
+//* Creating unified server for http and https
+var unifiedServer = function (req, res) {
 	//* Whenever someone call localhost:3000 this function gets called and the req and res object is new every time
 
 	//* 1. Get the url and parse it
@@ -124,15 +155,7 @@ var server = http.createServer(function (req, res) {
 		// 	buffer
 		// );
 	});
-});
-
-//* Start the server and set the port dynamically
-server.listen(config.port, function () {
-	// console.log("The sever is listening on port 3000");
-	console.log(
-		`The server is listening on port ${config.port} in ${config.envName} mode`
-	);
-});
+};
 
 //* Define the handlers
 var handlers = {};
