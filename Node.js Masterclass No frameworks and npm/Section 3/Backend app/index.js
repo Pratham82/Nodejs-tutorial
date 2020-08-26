@@ -9,45 +9,11 @@ var http = require("http");
 var https = require("https");
 var url = require("url");
 var StringDecoder = require("string_decoder").StringDecoder;
-var config = require("./config");
+var config = require("./lib/config");
 var fs = require("fs");
-var _data = require("./lib/data");
-
-// console.log(http);
-
-//* Testing the library that we have created
-// TODO CREATE new file and write operation
-// _data.create("test", "testingFile", { name: "Jason" }, function (err) {
-// 	console.log(
-// 		err == false ? "Data successfully written to the file ✅" : "Error 😢 ",
-// 		err
-// 		// "This was error",
-// 		// err
-// 	);
-// });
-
-// // TODO Testing read file operation
-// _data.read("test", "testingFile", function (err, data) {
-// 	console.log(
-// 		// err == false ? `Data from the file ${data}` : "Error 😢 ",
-// 		// err
-// 		!err ? `Data from the file ${data}` : `Error 😢 \n${err}`
-// 	);
-// });
-
-// // TODO Testing update file operation
-// _data.update("test", "testingFile", { name: "New data" }, function (err) {
-// 	console.log(
-// 		err == false ? "Data successfully updated ✅" : ` Error 😢  ${err}`
-// 	);
-// });
-
-// TODO Testing delete file operation
-_data.delete("test", "testingFile", function (err) {
-	console.log(
-		err == false ? "File successfully deleted ✅" : ` Error 😢  ${err}`
-	);
-});
+// var _data = require("./lib/data");
+var handlers = require("./lib/handlers");
+var helpers = require("./lib/helpers");
 
 //* Instantiating the HTTP server
 var HTTPServer = http.createServer(function (req, res) {
@@ -94,7 +60,7 @@ var unifiedServer = function (req, res) {
 	var trimmedPath = path.replace(/^\/+|\/+$/g, "");
 
 	//* 2.1 Get the HTTP method
-	var method = req.method;
+	var method = req.method.toLowerCase();
 
 	//* 2.2 Get the query string as an object
 	var queryStringObject = parsedUrl.query;
@@ -141,7 +107,7 @@ var unifiedServer = function (req, res) {
 			queryStringObject,
 			method,
 			headers,
-			payload: buffer,
+			payload: helpers.parseJsonToObject(buffer),
 		};
 
 		//* Route the request  to the handler specified in the router
@@ -191,29 +157,10 @@ var unifiedServer = function (req, res) {
 	});
 };
 
-//* Define the handlers
-var handlers = {};
-
-//* Data inside the handlers contains the block of data which has been parsed earlier
-//* We want the handlers to callback when they're done handling the request and tell us 2 things : 1) Callback a HTTP status code 2) A payload(object)
-
-//* Creating sample handler
-handlers.sample = function (data, callback) {
-	callback(406, { name: "Sample handler" });
-};
-
-handlers.ping = function (data, callback) {
-	callback(200, { status: "connection alive" });
-};
-
-//* Not found handler
-handlers.notFound = function (data, callback) {
-	callback(404);
-};
 ///* Defining a request router
 var router = {
-	sample: handlers.sample,
 	ping: handlers.ping,
+	users: handlers.users,
 };
 
 /*
