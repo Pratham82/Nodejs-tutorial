@@ -12,6 +12,7 @@ environments.development = {
 	httpPort: 3000,
 	httpsPort: 3001,
 	envName: "development",
+	hashingSecret: "thisIsASecret",
 };
 
 //* Production object
@@ -19,6 +20,7 @@ environments.production = {
 	httpPort: 4000,
 	httpsPort: 4001,
 	envName: "production",
+	hashingSecret: "thisIsAlsoASecret",
 };
 
 //* Determine which environment was passed as command-line argument. Take the current environment and make it lowercase
