@@ -5,6 +5,7 @@ Library for storing and editing data
 //* Dependencies
 var fs = require("fs");
 var path = require("path");
+var helpers = require("./helpers");
 
 //* Container for the module (To be exported)
 var lib = {};
@@ -52,7 +53,12 @@ lib.read = function (dir, file, callback) {
 		err,
 		data
 	) {
-		callback(err, data);
+		if (!err && data) {
+			var parsedData = helpers.parseJsonToObject(data);
+			callback(false, parsedData);
+		} else {
+			callback(err, data);
+		}
 	});
 };
 
