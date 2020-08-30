@@ -1,0 +1,2 @@
+This is initial write on the file
+This line will be appended
