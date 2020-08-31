@@ -1,8 +1,8 @@
-console.log("utils.js");
+// console.log("utils.js");
 
-const name = "Prathamesh";
+// const name = "Prathamesh";
 
-const add = (n1, n2) => n1 + n2;
+// const add = (n1, n2) => n1 + n2;
 
-//* Exporting modules
-module.exports = add;
+// //* Exporting modules
+// module.exports = add;

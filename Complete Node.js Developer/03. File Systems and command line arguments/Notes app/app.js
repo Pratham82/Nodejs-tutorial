@@ -1,5 +1,5 @@
 const fs = require("fs");
-const getNotes = require("./notes");
+const notes = require("./notes");
 const chalk = require("chalk");
 const yargs = require("yargs");
 
@@ -40,12 +40,16 @@ yargs.command({
 	},
 
 	//* We can access the argv in this handler
-	handler: (argv) =>
-		console.log(
-			"Adding a new note...",
-			`\nTitle: ${argv.title}`,
-			`\nBody: ${argv.body} `
-		),
+	handler: (argv) => {
+		// console.log(
+		// 	"Adding a new note...",
+		// 	`\nTitle: ${argv.title}`,
+		// 	`\nBody: ${argv.body} `
+		// );
+		//Passing the data to the notes module
+
+		notes.addNote(argv.title, argv.body);
+	},
 });
 
 yargs.command({
