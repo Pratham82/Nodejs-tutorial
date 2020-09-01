@@ -1,4 +1,5 @@
 const fs = require("fs");
+const chalk = require("chalk");
 
 //* Challenge 2: Define and use a function a new file
 
@@ -15,9 +16,11 @@ const addNote = (title, body) => {
 			body,
 		});
 		saveNotes(notes);
-		console.log("New note added ...🖊");
+		console.log(
+			chalk.greenBright.inverse("New note successfully added ...🖊")
+		);
 	} else {
-		console.log("Title taken 👍");
+		console.log(chalk.yellowBright.inverse("Title taken 👍"));
 	}
 };
 
@@ -37,4 +40,31 @@ const loadNotes = () => {
 	}
 };
 
-module.exports = { getNotes, addNote };
+//* Remove notes function
+const removeNote = (title) => {
+	const titleIndex = loadNotes()
+		.map((val) => val.title)
+		.indexOf(title);
+
+	const titles = loadNotes().map((val) => `"${val.title}"`);
+
+	if (titleIndex > -1) {
+		console.log(`found notes at index ${titleIndex}`);
+		const newNotes = loadNotes().filter((val) => val.title !== title);
+		console.log(
+			chalk.greenBright.inverse(
+				`Successfully removed note with title: ${title} 🗑`
+			)
+		);
+
+		saveNotes(newNotes);
+	} else {
+		console.log(
+			chalk.redBright(
+				`Notes with this title ${title} not found ☹️\nThese are the available title:  ${titles}`
+			)
+		);
+	}
+};
+
+module.exports = { getNotes, addNote, removeNote };

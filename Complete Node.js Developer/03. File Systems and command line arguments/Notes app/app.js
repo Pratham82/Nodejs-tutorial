@@ -41,21 +41,21 @@ yargs.command({
 
 	//* We can access the argv in this handler
 	handler: (argv) => {
-		// console.log(
-		// 	"Adding a new note...",
-		// 	`\nTitle: ${argv.title}`,
-		// 	`\nBody: ${argv.body} `
-		// );
-		//Passing the data to the notes module
-
 		notes.addNote(argv.title, argv.body);
 	},
 });
 
 yargs.command({
-	command: "delete",
+	command: "remove",
 	describe: "Remove a note",
-	handler: () => console.log("Removing a note..."),
+	builder: {
+		title: {
+			describe: "Note title",
+			demandOption: true,
+			type: "string",
+		},
+	},
+	handler: (argv) => notes.removeNote(argv.title),
 });
 
 yargs.command({
