@@ -8,9 +8,14 @@ const getNotes = () => "These are your Notes....";
 const addNote = (title, body) => {
 	const notes = loadNotes();
 	const duplicatesArr = notes.filter((note) => note.title === title);
-	console.log("Duplicate arr: ", duplicatesArr.length);
+	// console.log("Duplicate arr: ", duplicatesArr.length);
+	//The filter method in duplicatesArr will look through the whole array even though we found the first duplicate note, so instead of filer we can use find method
 
-	if (duplicatesArr.length === 0) {
+	//* Find method checks for first instance of the condition rather than going over complete array and returns true or false if it satisfies condition
+	const duplicateNote = notes.find((note) => note.title == title);
+
+	//* If there is no duplicate found we will add the note in the empty array
+	if (!duplicateNote) {
 		notes.push({
 			title,
 			body,
@@ -40,13 +45,26 @@ const loadNotes = () => {
 	}
 };
 
+//* Get titles
+const titleNotFound = (title) => {
+	const availableTitles = loadNotes().map((val) => `${val.title} `);
+	console.log(
+		chalk.redBright(`Notes with this title "${title}" not found ☹️`)
+	);
+	console.log(
+		chalk.yellowBright(
+			`These are the available titles:  ${availableTitles}`
+		)
+	);
+};
+
 //* Remove notes function
 const removeNote = (title) => {
 	const titleIndex = loadNotes()
 		.map((val) => val.title)
 		.indexOf(title);
 
-	const titles = loadNotes().map((val) => `"${val.title}"`);
+	// const titles = loadNotes().map((val) => `"${val.title}"`);
 
 	if (titleIndex > -1) {
 		console.log(`found notes at index ${titleIndex}`);
@@ -59,12 +77,28 @@ const removeNote = (title) => {
 
 		saveNotes(newNotes);
 	} else {
-		console.log(
-			chalk.redBright(
-				`Notes with this title ${title} not found ☹️\nThese are the available title:  ${titles}`
-			)
-		);
+		titleNotFound(title);
 	}
 };
 
-module.exports = { getNotes, addNote, removeNote };
+//* List all notes
+
+const listNotes = () => {
+	console.log(chalk.yellowBright.inverse("All notes:"));
+	console.log(
+		loadNotes()
+			.map((note) => `${chalk.bold(note.title)}: ${note.body}`)
+			.join("\n")
+	);
+};
+
+const readNote = (title) => {
+	const note = loadNotes().find((note) => note.title === title);
+	if (note) {
+		console.log(`${chalk.bold(note.title.toUpperCase())}: \n${note.body}`);
+	} else {
+		titleNotFound(title);
+	}
+};
+
+module.exports = { getNotes, addNote, removeNote, listNotes, readNote };
