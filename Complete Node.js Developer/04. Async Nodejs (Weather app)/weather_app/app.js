@@ -6,18 +6,26 @@ const foreCast = require("./utils/foreCast");
 
 require("dotenv").config();
 
-geoCode("Mumbai", (error, response) => {
-	console.log({
-		Response: response,
-		Error: error,
-	});
-	return {
-		Response: response,
-		Error: error,
-	};
-});
+//*  Taking the location from command line arg
+const address = process.argv[2];
+console.log(address);
 
-foreCast(18.937456, 72.826337, (error, data) => {
-	console.log("Error: ", error);
-	console.log("Data:", data);
+geoCode(address, (error, { location, lat, lon }) => {
+	if (address) {
+		//* Callback chaining
+		//* Passing responses from the geoCode APi to the foreCast API
+		if (error) {
+			return console.log("Error:", error);
+		}
+		foreCast(lat, lon, location, (error, data) => {
+			if (error) {
+				console.log(error);
+			} else {
+				console.log("Location: ", location);
+				console.log("Data:", data);
+			}
+		});
+	} else {
+		console.log("Please provide a location");
+	}
 });
