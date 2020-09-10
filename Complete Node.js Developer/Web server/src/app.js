@@ -1,44 +1,38 @@
+const path = require("path");
 const express = require("express");
 
 //* Express library exports a single function
 const app = express();
 
-/* 
-* get(route, function(req.res))
-* 1st argument will be the route that we take in
-* 2nd argument is the function: this function has two arguments, 
+const publicPath = path.join(__dirname, "../public");
 
-* Arguments in the function: 
-* 1.first is the object containing the info about incoming request to the server (called req)
-* 2. second argument is the response, this contains bunch of methods allowing us to customize, what we are going to send back to requestor (called res)
-*/
+app.set("view engine", "hbs");
 
-app.get("", (req, res) => {
-	res.send("Hello from express 😄");
-});
+//* Passing the static dir path to the express method
+//* this will show on root path on
+app.use(express.static(publicPath));
 
-//** Creating different routes
-
-//* We can also serve HTML on the routes
-app.get("/weatherInfo", (req, res) =>
-	res.send("<h1>Weather ☁️</h1> <p>This is the weather  page</p>")
-);
-
-//* We can also serve JSON response on the routes
-app.get("/help", (req, res) =>
-	res.send([{ name: "Prathamesh", message: "This is help page 💗" }])
-);
-
-app.get("/weather", (req, res) =>
-	res.send({
-		lat: 42.5512,
-		lon: 94.5541,
-		forecast: "Broken clouds",
+//* Rendering dynamic pages
+//* Passing data to the template
+app.get("", (req, res) =>
+	res.render("index", {
+		title: "Weather app dynamic",
+		name: "Prathamesh Mali",
 	})
 );
 
 app.get("/about", (req, res) =>
-	res.send("<h1>About</h1> <p>This is about 🙎 page</p>")
+	res.render("about", {
+		title: "About page dynamic",
+		about: "We help you to find weather info",
+	})
+);
+
+app.get("/help", (req, res) =>
+	res.render("help", {
+		title: "Help page",
+		info: "Help page from dynamic hbs",
+	})
 );
 
 //* Start the server
