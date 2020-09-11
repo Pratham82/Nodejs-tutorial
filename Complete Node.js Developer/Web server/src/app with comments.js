@@ -1,5 +1,6 @@
 const path = require("path");
 const express = require("express");
+const hbs = require("hbs");
 
 //* Express library exports a single function
 const app = express();
@@ -13,13 +14,17 @@ console.log(path.join(__dirname, "../public"));
 
 //**** Creating paths for express config
 const publicPath = path.join(__dirname, "../public");
-const viewsPath = path.join(__dirname, "../templates");
+const viewsPath = path.join(__dirname, "../templates/views");
+const partialsPath = path.join(__dirname, "../templates/partials");
 
 //*** Setup handlebars engine and views location ***
 //* Dynamic pages with template engine
-//* We will setup a template engine, set allows to set a value for given expres setting, in here we are setting name and a value. it should be exact 'view engine' or else express won't know we are setting up view engine. 2nd parameter is the "hbs" i.e handlebars extension
+//* We will setup a template engine, set allows to set a value for given express setting, in here we are setting name and a value. it should be exact 'view engine' or else express won't know we are setting up view engine. 2nd parameter is the "hbs" i.e handlebars extension
 app.set("view engine", "hbs");
 app.set("views", viewsPath);
+
+//* Registering partials path
+hbs.registerPartials(partialsPath);
 
 //*** Setup static directory to serve ***
 //* Passing the static dir path to the express method
@@ -39,6 +44,7 @@ app.get("/about", (req, res) =>
 	res.render("about", {
 		title: "About page dynamic",
 		about: "We help you to find weather info",
+		name: "Prathamesh Mali",
 	})
 );
 
@@ -46,6 +52,7 @@ app.get("/help", (req, res) =>
 	res.render("help", {
 		title: "Help page",
 		info: "Help page from dynamic hbs",
+		name: "Prathamesh Mali",
 	})
 );
 

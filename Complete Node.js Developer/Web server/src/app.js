@@ -1,16 +1,21 @@
 const path = require("path");
 const express = require("express");
+const hbs = require("hbs");
 
 //*** Express library exports a single function ***
 const app = express();
 
 //*** Creating paths for express config ***
 const publicPath = path.join(__dirname, "../public");
-const viewsPath = path.join(__dirname, "../templates");
+const viewsPath = path.join(__dirname, "../templates/views");
+const partialsPath = path.join(__dirname, "../templates/partials");
 
 //*** Setup handlebars engine and views location ***
 app.set("view engine", "hbs");
 app.set("views", viewsPath);
+
+//* Registering partials path
+hbs.registerPartials(partialsPath);
 
 //*** Setup static directory to serve ***
 //* Passing the static dir path to the express method
@@ -30,6 +35,7 @@ app.get("/about", (req, res) =>
 	res.render("about", {
 		title: "About page dynamic",
 		about: "We help you to find weather info",
+		name: "Prathamesh Mali",
 	})
 );
 
@@ -37,6 +43,7 @@ app.get("/help", (req, res) =>
 	res.render("help", {
 		title: "Help page",
 		info: "Help page from dynamic hbs",
+		name: "Prathamesh Mali",
 	})
 );
 
