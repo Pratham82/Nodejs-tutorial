@@ -1,18 +1,23 @@
 const path = require("path");
 const express = require("express");
 
-//* Express library exports a single function
+//*** Express library exports a single function ***
 const app = express();
 
+//*** Creating paths for express config ***
 const publicPath = path.join(__dirname, "../public");
+const viewsPath = path.join(__dirname, "../templates");
 
+//*** Setup handlebars engine and views location ***
 app.set("view engine", "hbs");
+app.set("views", viewsPath);
 
+//*** Setup static directory to serve ***
 //* Passing the static dir path to the express method
 //* this will show on root path on
 app.use(express.static(publicPath));
 
-//* Rendering dynamic pages
+//*** Rendering dynamic pages ***
 //* Passing data to the template
 app.get("", (req, res) =>
 	res.render("index", {

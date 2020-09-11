@@ -9,19 +9,24 @@ console.log(__dirname);
 
 console.log(__filename);
 // D:\Tutorials\Nodejs-tutorial\Complete Node.js Developer\Web server\src\app.js
-
 console.log(path.join(__dirname, "../public"));
-const publicPath = path.join(__dirname, "../public");
 
+//**** Creating paths for express config
+const publicPath = path.join(__dirname, "../public");
+const viewsPath = path.join(__dirname, "../templates");
+
+//*** Setup handlebars engine and views location ***
 //* Dynamic pages with template engine
 //* We will setup a template engine, set allows to set a value for given expres setting, in here we are setting name and a value. it should be exact 'view engine' or else express won't know we are setting up view engine. 2nd parameter is the "hbs" i.e handlebars extension
 app.set("view engine", "hbs");
+app.set("views", viewsPath);
 
+//*** Setup static directory to serve ***
 //* Passing the static dir path to the express method
 //* this will show on root path on
 app.use(express.static(publicPath));
 
-//* Rendering dynamic pages
+//*** Rendering dynamic pages ***
 //* Passing data to the template
 app.get("", (req, res) =>
 	res.render("index", {
