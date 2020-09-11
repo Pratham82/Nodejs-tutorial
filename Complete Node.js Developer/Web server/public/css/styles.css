@@ -1,3 +1,7 @@
+:root {
+	--nav-bg: rgb(139, 248, 179);
+}
+
 * {
 	padding: 0;
 	margin: 0;
@@ -21,7 +25,11 @@ p {
 .card {
 	display: grid;
 	place-items: center;
-	background-color: rgb(230, 219, 219);
+	background-image: linear-gradient(
+		to right,
+		rgb(37, 183, 246),
+		rgb(10, 221, 154)
+	);
 	width: 150px;
 	height: 180px;
 	border-radius: 15px;
@@ -41,4 +49,36 @@ p {
 	border-radius: 50%;
 	padding: 5px;
 	margin-top: 10px;
+}
+
+.nav {
+	display: flex;
+	justify-content: center;
+	background-color: var(--nav-bg);
+	width: 100%;
+	padding: 10px 0;
+	margin: 0 0 10px 0;
+}
+
+.nav-item {
+	padding: 0 15px;
+	font-size: 22px;
+}
+
+.nav a {
+	list-style-type: none;
+	text-decoration: none;
+	color: black;
+}
+
+.nav a:hover {
+	color: rgb(95, 91, 91);
+}
+
+footer {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background-color: var(--nav-bg);
 }
