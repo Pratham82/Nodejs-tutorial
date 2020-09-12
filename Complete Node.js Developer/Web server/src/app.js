@@ -26,14 +26,15 @@ app.use(express.static(publicPath));
 //* Passing data to the template
 app.get("", (req, res) =>
 	res.render("index", {
-		title: "Weather app dynamic",
+		title: "Weather",
+		info: "Get your weather right",
 		name: "Prathamesh Mali",
 	})
 );
 
 app.get("/about", (req, res) =>
 	res.render("about", {
-		title: "About page dynamic",
+		title: "About",
 		about: "We help you to find weather info",
 		name: "Prathamesh Mali",
 	})
@@ -41,8 +42,26 @@ app.get("/about", (req, res) =>
 
 app.get("/help", (req, res) =>
 	res.render("help", {
-		title: "Help page",
+		title: "Help",
 		info: "Help page from dynamic hbs",
+		name: "Prathamesh Mali",
+	})
+);
+
+//* Adding 404 handler specific to help pages
+app.get("/help/*", (req, res) =>
+	res.render("404page", {
+		message: "Help page not found",
+		name: "Prathamesh Mali",
+	})
+);
+
+//
+
+//* Adding a 404 handler
+app.get("*", (req, res) =>
+	res.render("404page", {
+		message: "Page not found",
 		name: "Prathamesh Mali",
 	})
 );
