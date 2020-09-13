@@ -56,6 +56,42 @@ app.get("/help", (req, res) =>
 	})
 );
 
+app.get("/weather", (req, res) => {
+	if (!req.query.address) {
+		return res.send({
+			error: "address is not provided",
+		});
+	} else {
+		return res.send({
+			forecast: " Its raining",
+			location: "New York",
+			address: req.query.address,
+		});
+	}
+});
+
+app.get("/products", (req, res) => {
+	if (!req.query.search) {
+		return res.send({
+			error: "Search term was not provided",
+		});
+	}
+	console.log(req.query.city);
+	console.log(req.query.search);
+	res.send({
+		milk: "10$",
+		notebook: "15$",
+	});
+});
+
+//* Adding a 404 handler
+app.get("*", (req, res) =>
+	res.render("404page", {
+		message: "Page not found",
+		name: "Prathamesh Mali",
+	})
+);
+
 /* 
 * get(route, function(req.res))
 * 1st argument will be the route that we take in
