@@ -56,6 +56,7 @@ app.get("/help", (req, res) =>
 	})
 );
 
+//* Creating a weather endpoint for testing
 app.get("/weather", (req, res) => {
 	if (!req.query.address) {
 		return res.send({

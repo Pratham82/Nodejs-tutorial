@@ -1,6 +1,8 @@
 const path = require("path");
 const express = require("express");
 const hbs = require("hbs");
+const geoCode = require("./utils/geoCode");
+const foreCast = require("./utils/foreCast");
 
 //*** Express library exports a single function ***
 const app = express();
@@ -57,17 +59,39 @@ app.get("/help/*", (req, res) =>
 );
 
 app.get("/weather", (req, res) => {
+	const address = req.query.address;
 	if (!req.query.address) {
 		return res.send({
-			error: "address is not provided",
-		});
-	} else {
-		return res.send({
-			forecast: " Its raining",
-			location: "New York",
-			address: req.query.address,
+			error: "please provide a address",
 		});
 	}
+	geoCode(req.query.address, (error, { location, lat, lon }) => {
+		if (address) {
+			//* Callback chaining
+			//* Passing responses from the geoCode APi to the foreCast API
+			if (error) {
+				return res.send({
+					error: error,
+				});
+			}
+			foreCast(lat, lon, location, (error, data) => {
+				if (error) {
+					return res.send({
+						error: error,
+					});
+				} else {
+					return res.send({
+						Location: location,
+						Data: data,
+					});
+				}
+			});
+		} else {
+			return res.send({
+				message: "Please provide a location",
+			});
+		}
+	});
 });
 
 app.get("/products", (req, res) => {
