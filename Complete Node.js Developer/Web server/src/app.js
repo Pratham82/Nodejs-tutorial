@@ -37,7 +37,7 @@ app.get("", (req, res) =>
 app.get("/about", (req, res) =>
 	res.render("about", {
 		title: "About",
-		about: "We help you to find weather info",
+		about: "Hi I'm Prathamesh 👋, I've created this app with node.js",
 		name: "Prathamesh Mali",
 	})
 );
@@ -45,7 +45,7 @@ app.get("/about", (req, res) =>
 app.get("/help", (req, res) =>
 	res.render("help", {
 		title: "Help",
-		info: "Help page from dynamic hbs",
+		info: "You can reach out to my github @pratham82 for help",
 		name: "Prathamesh Mali",
 	})
 );
@@ -65,7 +65,7 @@ app.get("/weather", (req, res) => {
 			error: "please provide a address",
 		});
 	}
-	geoCode(req.query.address, (error, { location, lat, lon }) => {
+	geoCode(req.query.address, (error, { location, lat, lon } = {}) => {
 		if (address) {
 			//* Callback chaining
 			//* Passing responses from the geoCode APi to the foreCast API
@@ -81,8 +81,8 @@ app.get("/weather", (req, res) => {
 					});
 				} else {
 					return res.send({
-						Location: location,
-						Data: data,
+						location,
+						data,
 					});
 				}
 			});

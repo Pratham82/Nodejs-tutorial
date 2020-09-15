@@ -22,7 +22,7 @@ const foreCast = (lat, lon, location, callback) => {
 				undefined,
 				`Its ${body.current.temp} °C, feels like ${
 					body.current.feels_like
-				} in ${location.split(",")[0]}, Today's forecast: ${
+				} °C in ${location.split(",")[0]}, Today's forecast: ${
 					body.current.weather[0].main
 				}`
 			);
