@@ -7,17 +7,25 @@
     <title>Weather Forecast</title>
     <link rel="icon" href="/img/weather.png">
     <link rel="stylesheet" href="css/styles.css" />
-    {{!-- <script src="script.js"></script> --}}
+
 </head>
 
 <body>
     {{>headers}}
 
     <div class="card">
-        <p>{{info}}</p>
+
+        <p class="location res"></p>
+        <p class="forecast res"></p>
+        <form>
+            <input type="text" class="inputStyle" placeholder="add a location">
+            <br>
+            <button class="btn-style">Get weather</button>
+        </form>
     </div>
 
     {{>footer}}
+    <script src="script.js"></script>
 </body>
 
 </html>
