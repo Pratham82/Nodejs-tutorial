@@ -60,7 +60,7 @@ console.log(selling_price);
 console.log(rating_by_user);
 
 //* Accessing destructuring inside a funciton
-const transaction = (type, { label, price }) =>
+const transaction = (type, { label = 0, price = 0 } = {}) =>
 	`Transaction type: ${type} \n${label}: ${price}`;
 
 console.log(transaction("Check", products));
