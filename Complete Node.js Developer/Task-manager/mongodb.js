@@ -21,46 +21,24 @@ MongoClient.connect(
 
 		const db = client.db(dbName);
 
-		//* Reading documents from the DB
+		//* Delete Documents
 
-		//* Find one document using findOne method
+		//* Delete one document
+		db.collection("users")
+			.deleteOne({ firstName: "Jesse" })
+			.then((res) => console.log(res))
+			.catch((err) => console.log(err));
 
-		//* Finding user by objectID
-		// _id: ObjectID("5f61f1090807ee4640c2f043")
+		//* Delete multiple docs:
+		db.collection("users")
+			.deleteMany({ age: 39 })
+			.then((res) => console.log(res))
+			.catch((err) => console.log(err));
 
-		// db.collection("users").findOne(
-		// 	{ firstName: "Prathamesh" },
-		// 	(err, res) => (err ? console.log(err) : console.log(res))
-		// );
-
-		//* Finding multiple data by filtering
+		//* Delete single task from the task collection
 		db.collection("tasks")
-			.find({ completed: true })
-			.toArray((err, res) =>
-				err ? console.log(err) : console.log("Completed sites:", res)
-			);
-
-		//* Counting the filtered data
-		db.collection("tasks")
-			.find({ completed: false })
-			.count((err, res) =>
-				err
-					? console.log(err)
-					: console.log(`Remaining Tasks count:`, res)
-			);
-
-		db.collection("tasks")
-			.find({ completed: false })
-			.toArray((err, res) =>
-				err ? console.log(err) : console.log(`Remaining tasks:`, res)
-			);
-
-		db.collection("tasks").findOne(
-			{
-				_id: new ObjectID("5f61f6b9f0fa6c4ab0f4111a"),
-			},
-			(err, res) =>
-				err ? console.log(err) : console.log("Last task:", res)
-		);
+			.deleteOne({ task: "New task copy" })
+			.then((res) => console.log(res))
+			.catch((err) => console.log(err));
 	}
 );
