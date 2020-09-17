@@ -1,12 +1,16 @@
 //* CRUD Operations
 
-const mongodb = require("mongodb");
-const mongoClient = mongodb.MongoClient;
+// const mongodb = require("mongodb");
+// const mongoClient = mongodb.MongoClient;
+// const ObjectID = mongodb.ObjectID;
+
+//* Destructuring the properties from mongoDB
+const { MongoClient, ObjectID } = require("mongodb");
 
 const connectionURL = "mongodb://127.0.0.1:27017";
 const dbName = "task-manager";
 
-mongoClient.connect(
+MongoClient.connect(
 	connectionURL,
 	{ useNewUrlParser: true },
 	(error, client) => {
@@ -17,68 +21,46 @@ mongoClient.connect(
 
 		const db = client.db(dbName);
 
-		//* Example for insertOne()
-		// db.collection("users").insertOne(
-		// 	{
-		// 		firstName: "Prathamesh",
-		// 		lastName: "Mali",
-		// 	},
-		// 	(err, res) =>
-		// 		err
-		// 			? console.log(`unable to insert user`)
-		// 			: console.log(`inserted user successfully`, res.ops)
+		//* Reading documents from the DB
+
+		//* Find one document using findOne method
+
+		//* Finding user by objectID
+		// _id: ObjectID("5f61f1090807ee4640c2f043")
+
+		// db.collection("users").findOne(
+		// 	{ firstName: "Prathamesh" },
+		// 	(err, res) => (err ? console.log(err) : console.log(res))
 		// );
 
-		//* Example of insertMany()
-		// db.collection("users").insertMany(
-		// 	[
-		// 		{
-		// 			firstName: "John",
-		// 			lastName: "Snow",
-		// 		},
-		// 		{
-		// 			firstName: "Ned",
-		// 			lastName: "Stark",
-		// 		},
-		// 		{
-		// 			firstName: "Rob",
-		// 			lastName: "Stark",
-		// 		},
-		// 	],
-		// 	(err, res) =>
-		// 		err
-		// 			? console.log(`unable to add docs`)
-		// 			: console.log(
-		// 					`docs added successfully`,
-		// 					res.ops,
-		// 					`\nCount: ${res.insertedCount}`
-		// 			  )
-		// );
+		//* Finding multiple data by filtering
+		db.collection("tasks")
+			.find({ completed: true })
+			.toArray((err, res) =>
+				err ? console.log(err) : console.log("Completed sites:", res)
+			);
 
-		db.collection("tasks").insertMany(
-			[
-				{
-					task: "Host the site",
-					completed: true,
-				},
-				{
-					task: "Write new article",
-					completed: false,
-				},
-				{
-					task: "Push the new changes to repo",
-					completed: true,
-				},
-			],
-			(err, res) =>
+		//* Counting the filtered data
+		db.collection("tasks")
+			.find({ completed: false })
+			.count((err, res) =>
 				err
-					? console.log(`Unable to add tasks into DB`)
-					: console.log(
-							"Added tasks to DB",
-							`\nTasks: `,
-							res.ops,
-							`\nTask count: ${res.insertedCount}`
-					  )
+					? console.log(err)
+					: console.log(`Remaining Tasks count:`, res)
+			);
+
+		db.collection("tasks")
+			.find({ completed: false })
+			.toArray((err, res) =>
+				err ? console.log(err) : console.log(`Remaining tasks:`, res)
+			);
+
+		db.collection("tasks").findOne(
+			{
+				_id: new ObjectID("5f61f6b9f0fa6c4ab0f4111a"),
+			},
+			(err, res) =>
+				err ? console.log(err) : console.log("Last task:", res)
 		);
 	}
 );
