@@ -3,13 +3,35 @@
 // 	area: (l, b) => 2 * (l * b),
 // };
 
-// Importing rectangle from external modules
+//* Importing rectangle from external modules
 
 const rect = require("./rectangle");
 
-const solveRect = (l = 1, b = 1) =>
-	l === 0 || b === 0
-		? `Rectangle Dimensions should be greater than 0`
-		: `Area of triangle: ${rect.area(l, b)} `;
+function solveRect(l, b) {
+	console.log("Solving for rectangle with l = " + l + " and b = " + b);
+	rect(l, b, (err, rectangle) => {
+		if (err) {
+			console.log("ERROR: ", err.message);
+		} else {
+			console.log(
+				"The area of the rectangle of dimensions l = " +
+					l +
+					" and b = " +
+					b +
+					" is " +
+					rectangle.area()
+			);
+			console.log(
+				"The perimeter of the rectangle of dimensions l = " +
+					l +
+					" and b = " +
+					b +
+					" is " +
+					rectangle.perimeter()
+			);
+		}
+	});
+	console.log("This statement after the call to rect()");
+}
 
-console.log(solveRect());
+console.log(solveRect(1, 1));

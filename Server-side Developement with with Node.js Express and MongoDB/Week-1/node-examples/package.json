@@ -1,7 +1,7 @@
 {
 	"name": "node-examples",
 	"version": "1.0.0",
-	"description": "Simkle node examples",
+	"description": "Simple node examples",
 	"main": "index.js",
 	"scripts": {
 		"start": "node index",
