@@ -6,78 +6,47 @@ const url = "mongodb://localhost:27017/";
 const dbName = "conFusion";
 
 //*  Accessing server
-MongoClient.connect(url, (err, client) => {
-	assert.equal(err, null);
+MongoClient.connect(url)
+	.then((client) => {
+		console.log("Connected correctly to server");
+		const db = client.db(dbName);
 
-	console.log("Connected successfully to the Server");
+		dbOperations
+			.insertDocument(
+				db,
+				{ name: "Vadonut", description: "Test" },
+				"dishes"
+			)
+			.then((result) => {
+				console.log("Insert Document:\n", result.ops);
 
-	//* Connect to the database
-	const db = client.db(dbName);
+				return dbOperations.findDocuments(db, "dishes");
+			})
+			.then((docs) => {
+				console.log("Found Documents:\n", docs);
 
-	//* Connecting to the dishes collection
-	const collection = db.collection("dishes");
-
-	//*  Adding one document in our collection
-	//* 1st parameter: document, 2nd parameter: callback function
-	// collection.insertOne(
-	// 	{
-	// 		name: "JumboBurger",
-	// 		description: "Biggest burger",
-	// 	},
-	// 	(err, res) => {
-	// 		assert.equal(err, null);
-
-	// 		console.log("After Insert:\n");
-	// 		console.log(res.ops);
-
-	// 		collection.find({}).toArray((err, docs) => {
-	// 			assert.equal(err, null);
-
-	// 			console.log("Found:\n");
-	// 			console.log(docs);
-
-	// 			db.dropCollection("dishes", (err, res) => {
-	// 				assert.equal(err, null);
-	// 				client.close();
-	// 			});
-	// 		});
-	// 	}
-	// );
-
-	//* Using dbOperations
-	dbOperations.insertDocument(
-		db,
-		{ name: "JumboBurger", description: "Humongous burger" },
-		"dishes",
-		(res) => {
-			console.log("Inserted doc\n", res.ops);
-
-			//* Finding all docs
-			dbOperations.findDocuments(db, "dishes", (docs) => {
-				console.log("Found docs:", docs);
-
-				//* Updating the doc
-				dbOperations.updateDocument(
+				return dbOperations.updateDocument(
 					db,
-					{ name: "JumboBurger" },
-					{ description: "Big burger updated" },
-					"dishes",
-					(res) => {
-						console.log("Updated docs\n", res.result);
-
-						//* Again find all docs
-						dbOperations.findDocuments(db, "dishes", (docs) => {
-							console.log("Found docs:", docs);
-
-							//* Remove all docs from the collection
-							db.dropCollection("dishes", (res) => {
-								console.log("All dishes removed");
-								client.close();
-							});
-						});
-					}
+					{ name: "Vadonut" },
+					{ description: "Updated Test" },
+					"dishes"
 				);
-			});
-		}
-	);
-});
+			})
+			.then((result) => {
+				console.log("Updated Document:\n", result.result);
+
+				return dbOperations.findDocuments(db, "dishes");
+			})
+			.then((docs) => {
+				console.log("Found Updated Documents:\n", docs);
+
+				return db.dropCollection("dishes");
+			})
+			.then((result) => {
+				console.log("Dropped Collection: ", result);
+
+				return client.close();
+			})
+			.catch((err) => console.log(err));
+	})
+	.catch((err) => console.log(err));
