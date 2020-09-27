@@ -52,45 +52,25 @@ app.use(
 	})
 );
 
+app.use("/", indexRouter);
+app.use("/users", usersRouter);
+
 //* Adding authorization
 const auth = (req, res, next) => {
 	console.log(req.session);
 
 	//*  If the cookie is not available then we will create new cookie
-	if (!req.session.userName) {
-		var authHeader = req.headers.authorization;
-
-		if (!authHeader) {
-			var err = new Error("You are not authenticated");
-			res.setHeader("WWW-Authenticate", "Basic");
-			err.status = 401;
-			return next(err);
-		}
-
-		//* Extracting auth header
-		var auth = new Buffer.from(authHeader.split(" ")[1], "base64")
-			.toString()
-			.split(":");
-		var userName = auth[0];
-		var password = auth[1];
-
-		if (userName === "admin" && password === "admin") {
-			// res.cookie("userName", "admin", { signed: true });
-			req.session.userName = "admin";
-			next();
-		} else {
-			var err = new Error("You are not authenticated");
-			res.setHeader("WWW-Authenticate", "Basic");
-			err.status = 401;
-			return next(err);
-		}
+	if (!req.session.user) {
+		var err = new Error("You are not authenticated");
+		err.status = 401;
+		return next(err);
 	} else {
 		//* If cookie is available on the server
-		if (req.session.userName === "admin") {
+		if (req.session.user === "authenticated") {
 			next();
 		} else {
 			var err = new Error("You are not authenticated");
-			err.status = 401;
+			err.status = 403;
 			return next(err);
 		}
 	}
@@ -101,8 +81,6 @@ app.use(auth);
 app.use(express.static(path.join(__dirname, "public")));
 
 //* Adding custom endpoints
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
 app.use("/dishes", dishRouter);
 app.use("/leaders", leaderRouter);
 app.use("/promos", promoRouter);
