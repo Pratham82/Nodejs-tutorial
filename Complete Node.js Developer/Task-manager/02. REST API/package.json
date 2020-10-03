@@ -1,0 +1,17 @@
+{
+	"name": "task-manager",
+	"version": "1.0.0",
+	"description": "Task manager app using nodejs",
+	"main": "index.js",
+	"scripts": {
+		"start": "node mongodb.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Prathamesh Mali",
+	"license": "MIT",
+	"dependencies": {
+		"mongodb": "^3.6.2",
+		"mongoose": "^5.10.7",
+		"nodemon": "^2.0.4"
+	}
+}
