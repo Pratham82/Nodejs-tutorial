@@ -12,6 +12,7 @@
 	"dependencies": {
 		"mongodb": "^3.6.2",
 		"mongoose": "^5.10.7",
-		"nodemon": "^2.0.4"
+		"nodemon": "^2.0.4",
+		"validator": "^13.1.17"
 	}
 }
