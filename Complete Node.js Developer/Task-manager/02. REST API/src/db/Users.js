@@ -19,6 +19,17 @@ const User = mongoose.model("User", {
       }
     },
   },
+  password: {
+    type: String,
+    trim: true,
+    required: true,
+    minlength: [7, "Password should be more than 6 characters"],
+    validate(val) {
+      if (val.toLowerCase().includes("password")) {
+        throw new Error("Password should not be same as password");
+      }
+    },
+  },
   age: {
     type: Number,
     default: 0,
@@ -33,6 +44,7 @@ const User = mongoose.model("User", {
 const john = new User({
   name: "       John",
   email: "       John@gmail.com          ",
+  password: "pass@fdd",
 });
 
 john
