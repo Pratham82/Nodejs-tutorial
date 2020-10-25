@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Task = require("./Tasks");
+//const Task = require("./Tasks");
 const User = require("./Users");
 
 // Connecting to the DB

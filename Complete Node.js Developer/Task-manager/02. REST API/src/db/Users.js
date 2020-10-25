@@ -47,9 +47,20 @@ const john = new User({
   password: "pass@fdd",
 });
 
+const john2 = new User({
+  name: " john2",
+  email: "dfdfdf",
+  password: "dfsdfdfdf",
+});
+
 john
   .save()
   .then((res) => console.log("Added user successfully", res))
+  .catch((err) => console.log(err));
+
+john2
+  .save()
+  .then((res) => console.log("@@@@@@@User created", res))
   .catch((err) => console.log(err));
 
 module.exports = User;
