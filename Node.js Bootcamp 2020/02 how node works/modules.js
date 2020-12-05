@@ -29,7 +29,11 @@ require('./test-module-3')()
 40
 200
 25
+
+//hello line was only loaded once and executed once
 hello from module
+
+// These came from cache and didn't loaded again
 Log this  😈
 Log this  😈
 Log this  😈
