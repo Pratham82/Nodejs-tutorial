@@ -42,11 +42,67 @@ const getDogPic = async () => {
     await writeFilePromise(`${__dirname}/dog-image.txt`, dogPic)
   } catch (err) {
     console.log(err)
+    // Handling the error in case we are returning value from this function, we wll throw the error and catch it while using the promise
+    throw err
   }
+
+  // Returning value from an async function
+  // But even if there was an error we will still get this return value
+  return '2:  Return value 🟢'
 }
 
+// Calling async method
+
+// Using IFFIES
+;(async () => {
+  try {
+    console.log('1: We will get dog pics')
+    const value = await getDogPic()
+    console.log(value)
+    console.log('3: Save the dog pics to file')
+  } catch (error) {
+    console.log('Error 🔴')
+  }
+})()
+
+/*
+// Using promises
+
+console.log('1: We will get dog pics')
+//getDogPic()
+
+// Storing the value of method in a variable
+//const val = getDogPic()
+//console.log(val) // This will return a pending promise
+
+// For getting the return value from an async function we have to use the then method, just like normal promises
 getDogPic()
-//getDogPic2('labrador').then((res) => console.log(res.body.message))
+  .then((res) => console.log(res))
+  .catch((err) => console.log(err))
+
+console.log('3: Save the dog pics to file')
+*/
+
+/*
+Output of above 3 lines: 
+
+
+1: We will get dog pics
+2: Save the dog pics to file
+husky
+Data written to the file
+
+Q.1 Why the order of these functions i like that ? why the getDogPic() async function didn't logged before the line '2: Save the ....'
+
+Ans: 
+1.  Async function runs in the background, we cannot stop the code(execution of main thread) when getDogPic() an async function is called, thats the whole philosophy of don't block the event loop.
+2. So when the JS engine sees the async function(getDogPic) it will offload the function to the background and goes to the next line which is the 2nd console.log
+
+*/
+
+// Old code
+
+// EndPoint: getDogPic2('labrador').then((res) => console.log(res.body.message))
 /* 
 // using our own promise
 readFilePromise(`${__dirname}/dog.txt`)
