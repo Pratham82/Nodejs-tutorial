@@ -120,7 +120,7 @@ Ans:
 
 // EndPoint: getDogPic2('labrador').then((res) => console.log(res.body.message))
 /* 
-// using our own promise
+// Using our own promise
 readFilePromise(`${__dirname}/dog.txt`)
   .then((data) => {
     return superagent.get(`https://dog.ceo/api/breed/${data}/images/random`)
