@@ -35,11 +35,27 @@ const getDogPic = async () => {
     const dogName = await readFilePromise(`${__dirname}/dog.txt`)
     console.log(dogName)
 
+    // Calling multiple promises
+    /*    // Old code
     const dogPic = await superagent
       .get(`https://dog.ceo/api/breed/${dogName}/images/random`)
       .then((res) => res.body.message)
+      */
+    const dogPicRes1 = await superagent
+      .get(`https://dog.ceo/api/breed/${dogName}/images/random`)
+      .then((res) => res.body.message)
+    const dogPicRes2 = await superagent
+      .get(`https://dog.ceo/api/breed/${dogName}/images/random`)
+      .then((res) => res.body.message)
+    const dogPicRes3 = await superagent
+      .get(`https://dog.ceo/api/breed/${dogName}/images/random`)
+      .then((res) => res.body.message)
 
-    await writeFilePromise(`${__dirname}/dog-image.txt`, dogPic)
+    // Combining multiple promises
+    const all = await Promise.all([dogPicRes1, dogPicRes2, dogPicRes3])
+    console.log(all)
+
+    await writeFilePromise(`${__dirname}/dog-image.txt`, all.join('\n'))
   } catch (err) {
     console.log(err)
     // Handling the error in case we are returning value from this function, we wll throw the error and catch it while using the promise
